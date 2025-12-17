@@ -10,6 +10,6 @@
   "author": "Manish Parmar",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^4.22.1"
   }
 }

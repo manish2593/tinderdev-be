@@ -1,56 +1,49 @@
-const express = require('express');
-const app = express();
-const { routes } = require('./paths');
-app.use(express.json());
+const {
+    isAdmin,
+    isAuthenticated
+} = require("./middlewares/auth");
 
-for(let i in routes) {
-    app.get(i, (req,res)=> {
-        console.log(req.query)
-        res.send(routes[i]);
-    });
-}
+const { app } = require('./server');
+const { PORT } = require("./variables");
 
-app.post('/users', (req,res) => {
-    console.log(req.body);
-    res.send("User data has been saved successfully.")
-});
-
-app.put('/user/:id', (req,res) => {
-    res.send("User data has been updated successfully.")
-});
-
-app.delete('/user/:id', (req,res) => {
-    res.send("User has been deleted successfully.")
-});
-
-app.listen(7777, () => {
-    console.log("Listening at 7777");
-})
+//Using middlewares
+app.use('/admin', [isAuthenticated, isAdmin]);
+app.use('/users', isAuthenticated);
 
 
-// Use multiple route handlers
-app.get("/", (req,res, next) => {
-    console.log("Handler 1");
-    // res.send("Sending Response from handler 1");
-    next();
-}, (req, res, next) => {
-    res.send("Sending Response from handler 2");
-    console.log("Handler 2");
-})
-
-// Use multiple route as array
-const handlers = [
-    (req,res, next) => {
-        console.log("Handler 1");
-        // res.send("Sending Response from handler 1");
-        next();
-    }, (req, res, next) => {
-        // res.send("Sending Response from handler 2");
-        next();
-        console.log("Handler 2");
-    },(req, res, next) => {
-        res.send("Sending Response from handler 3");
-        console.log("Handler 3");
+app.get('/getusers', (req, res, next) => {
+    try {
+        // throw new Error("Failed intensionally");
+        res.status(200).send("All public users fetched.");
+    } catch(err){
+        throw new Error(err.message)
     }
-]
-app.get("/abc", handlers)
+})
+
+app.get('/users', (req, res) => {
+    res.status(200).send("All private users data fetched.");
+})
+
+app.get('/users/:id', (req, res) => {
+    res.status(200).send(`User with id ${req.params.id} has been fetched.`);
+})
+
+app.get('/admin/users', (req, res) => {
+    res.status(200).send("All admin users data fetched.");
+})
+
+app.delete('/admin/deleteuser', (req, res) => {
+    res.status(200).send("Admin delete one user successfully.");
+})
+
+app.post('/login', (req, res) => {
+    res.status(200).send("Login successfully");
+})
+
+app.use('/', (err, req, res, next) => {
+    res.status(500).send(`Request failed with ${err.message}`);
+});
+
+app.listen(PORT, () => {
+    console.log(`Express server started at ${PORT}`)
+})

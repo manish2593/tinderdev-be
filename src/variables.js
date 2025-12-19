@@ -12,5 +12,10 @@ const USER_OBJECT = {
     address: "Super corridor, indore",
     skills: ["Salesforce", "nodejs"] 
 };
-
-module.exports = {PORT, ADMIN_TOKEN, DATABASE_URI, DATABASE_NAME, USER_OBJECT}
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ERROR_MESSAGES = {
+    email: "Email is not valid",
+    phone: "Please enter valid phone number"
+}
+const GENDER_ENUM = ['male', 'female'];
+module.exports = {PORT, ADMIN_TOKEN, DATABASE_URI, DATABASE_NAME, USER_OBJECT, EMAIL_REGEX, ERROR_MESSAGES, GENDER_ENUM}

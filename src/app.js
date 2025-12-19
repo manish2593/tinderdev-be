@@ -53,7 +53,7 @@ app.put('/users', async (req, res) => {
         const user = await UserModel.findOneAndUpdate({_id: req.body.userId}, req.body, {
             returnDocument: 'after',
             lean: true,
-            select: "phone"
+            select: "phone",
         })
         res.status(200).send(user);
     } catch(err) {

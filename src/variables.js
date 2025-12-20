@@ -21,7 +21,7 @@ const ERROR_MESSAGES = {
     phone: "Please enter valid phone number",
     password: "Please enter a strong password",
     skills: "More than 10 skills are not allowed.",
-    address: "Please enter address less to 10 char.",
+    address: "Please enter address less to 100 char.",
     lastName: "Please enter valid lastname.",
     firstName: "Please enter valid firstname."
 }

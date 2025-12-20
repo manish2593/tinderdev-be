@@ -6,7 +6,7 @@ const {
 } = require('../variables');
 const {
     validateSkills
-} = require('../utils/common');
+} = require('../utils/validator');
 const {
     isMobilePhone,
     isStrongPassword,
@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
         validate: {
             validator: (val) => isByteLength(val, {
                 min: 0,
-                max: 10
+                max: 100
             }),
             message: ERROR_MESSAGES.address
         }

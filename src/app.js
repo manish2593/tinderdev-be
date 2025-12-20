@@ -7,15 +7,20 @@ const {
 const UserModel = require('./models/user');
 const {
     validateSignupFields
-} = require('./utils/common');
+} = require('./utils/validator');
+const {
+    signupPayload
+} = require('./generators/signup');
 
 app.post('/signup', async (req, res) => {
     try {
         if (!validateSignupFields(req.body)) {
             throw new Error("Invalid Singup Data.");
         }
-        const user = new UserModel(req.body);
+        const payload = await signupPayload(req);
+        const user = new UserModel(payload);
         const dbResp = await user.save();
+
         res.status(200).send({
             message: "User got created successfully.",
             data: dbResp

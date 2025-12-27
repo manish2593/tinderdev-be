@@ -1,11 +1,25 @@
-const {ADMIN_TOKEN} = require('../variables');
+const req = require('express/lib/request');
+const {ADMIN_TOKEN, JWT_SECRET} = require('../variables');
+const jwt = require('jsonwebtoken');
+const UserModel = require("../models/user");
 
-const isAuthenticated = (req, res, next) => {
-    const token = req.query.token;
-    if(!!token) {
-        next();
-    } else {
-        res.status(401).send("User is not authorised");
+const isAuthenticated = async (req, res, next) => {
+    try {
+        const token = req?.cookies?.token;
+        if(!token) {
+            throw new Error("Unauthorised Access");
+        }
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+        const user = await UserModel.findOne({_id: decodedToken._id});
+        if(!!decodedToken && !!user) {
+            req.session.user = user;
+            next();
+        } else {
+            throw new Error("Unauthorised Access");
+        }
+    } catch(err) {
+        console.log("errr", err.message);
+        res.status(401).send("Unauthorised access!!");
     }
 }
 
@@ -18,7 +32,20 @@ const isAdmin = (req, res, next) => {
     }
 }
 
+const isUnauthorisedPath = (middleWare, paths) => {
+    return (req, res, next) => {
+        console.log(paths.indexOf(req.path));
+        if(paths.indexOf(req.path) > -1) {
+            next();
+        } else {
+            console.log( "api paths", req.path, paths);
+            middleWare(req, res, next);
+        }
+    }
+}
+
 module.exports = {
     isAuthenticated,
-    isAdmin
+    isAdmin,
+    isUnauthorisedPath
 }

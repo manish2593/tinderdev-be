@@ -26,8 +26,12 @@ const ERROR_MESSAGES = {
     firstName: "Please enter valid firstname."
 }
 const GENDER_ENUM = ['male', 'female'];
+const JWT_SECRET = "@Dev!!Tinder@BE";
+const UNAUTHORISED_PATH = ['/login', '/signup'];
 module.exports = {
     PORT,
+    JWT_SECRET,
+    UNAUTHORISED_PATH,
     ADMIN_TOKEN,
     DATABASE_URI,
     DATABASE_NAME,

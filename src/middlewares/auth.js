@@ -1,4 +1,3 @@
-const req = require('express/lib/request');
 const {ADMIN_TOKEN, JWT_SECRET} = require('../variables');
 const jwt = require('jsonwebtoken');
 const UserModel = require("../models/user");
@@ -12,7 +11,7 @@ const isAuthenticated = async (req, res, next) => {
         const decodedToken = jwt.verify(token, JWT_SECRET);
         const user = await UserModel.findOne({_id: decodedToken._id});
         if(!!decodedToken && !!user) {
-            req.session.user = user;
+            req.user = user;
             next();
         } else {
             throw new Error("Unauthorised Access");

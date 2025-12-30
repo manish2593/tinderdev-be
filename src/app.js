@@ -1,138 +1,20 @@
 const app = require('./config/server');
 const connectDB = require('./config/database');
-const jwt = require("jsonwebtoken");
 
 const {
     DATABASE_NAME,
-    PORT,
-    JWT_SECRET
+    PORT
 } = require("./variables");
-const UserModel = require('./models/user');
+
 const {
-    validateSignupFields, validateLogin
-} = require('./utils/validator');
-const {
-    signupPayload
-} = require('./generators/signup');
+    userRouter,
+    profileRouter,
+    authRouter
+} = require('./routes/index');
 
-app.post('/signup', async (req, res) => {
-    try {
-        if (!validateSignupFields(req.body)) {
-            throw new Error("Invalid Singup Data.");
-        }
-        const payload = await signupPayload(req);
-        const user = new UserModel(payload);
-        const dbResp = await user.save();
-
-        res.status(200).send({
-            message: "User got created successfully.",
-            data: dbResp
-        });
-    } catch (err) {
-        res.status(400).send("Request failed with err: " + err.message);
-    }
-})
-
-app.post('/login', async (req, res) => {
-    if (!req?.body?.email || !req?.body?.password) {
-        throw new Error("Invalid Request");
-    }
-
-    try {
-        const user = await UserModel.findOne({email: req.body?.email});
-        const isValidUser = await validateLogin(req.body, user);
-        if (isValidUser) {
-            const token = await jwt.sign({_id: user._id, name: `${user.firstName} ${user.lastName}`}, JWT_SECRET);
-            res.cookie("token", token);
-            res.status(200).send("Login successful");
-        } else {
-            res.status(401).send("Invalid Credentials");
-        }
-    } catch(err) {
-        throw new Error("Request failed :" + err.message);
-    }
-})
-
-// find user by email
-app.get('/user', async (req, res) => {
-    try {
-        const token = req?.cookies?.token;
-        const user = await UserModel.find({
-            email: req.body.email
-        });
-        res.status(200).send({
-            user
-        });
-    } catch (err) {
-        res.status(400).send("Something went wrong");
-    }
-})
-
-app.get('/profile', async(req, res) => {
-    try {
-        const user = req.session.user;
-        if(!!user) {
-            res.status(200).send({
-                user
-            });
-        } else {
-            res.status(401).send("User not found");
-        }
-    } catch(err) {
-        console.log("err 1", err.message)
-        res.status(400).send("Unauthorised Access//.");
-    }
-})
-// fetch all users
-app.get('/users', async (req, res) => {
-    try {
-        const users = await UserModel.findOne({email: "meher1@mail.com"});
-        res.status(200).send(users);
-    } catch (err) {
-        res.status(400).send("Something went wrong");
-    }
-})
-
-// update a user find findByIdAndUpdate
-app.patch('/users/:userId', async (req, res) => {
-    try {
-        if (!validateSignupFields(req.body)) {
-            throw new Error("Bad Request. Please check payload.");
-        }
-
-        const user = await UserModel.findByIdAndUpdate(req.params.userId, req.body, {
-            returnDocument: 'after',
-            lean: true,
-            runValidators: true
-        })
-        res.status(200).send(user);
-    } catch (err) {
-        res.status(400).send("User update failed " + err.message);
-    }
-})
-
-// update a user by findOneAndDelete
-app.put('/users', async (req, res) => {
-    try {
-        const user = await UserModel.findOneAndUpdate({
-            _id: req.body.userId
-        }, req.body, {
-            returnDocument: 'after',
-            lean: true,
-            runValidators: true
-        })
-        res.status(200).send(user);
-    } catch (err) {
-        res.status(400).send("Something went wrong");
-    }
-})
-
-
-// Delete a user
-app.delete('/users', async (req, res) => {
-    const user = await UserModel.findByIdAndDelete(req.body.userId)
-    res.send("User delected successfully.")
-})
+app.use('/', authRouter);
+app.use('/', profileRouter);
+app.use('/', userRouter);
 
 connectDB().then(() => {
     console.log(`connected to database ${DATABASE_NAME} successfully`)

@@ -11,7 +11,7 @@ const validateSkills = (skills = []) => {
 
 const validateLogin = async (payload = {}, user = {}) => {
     try {
-        const isValidPassword = await bcrypt.compare(payload?.password, user.password);
+        const isValidPassword = await user.isPasswordValid(payload.password);
         const isValidUser = !!user && !!isValidPassword;
         return isValidUser;
     } catch(err) {

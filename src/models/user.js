@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const {
     ERROR_MESSAGES,
     GENDER_ENUM,
-    PHONE_COUNTRY_CODE
+    PHONE_COUNTRY_CODE,
+    JWT_SECRET
 } = require('../variables');
 const {
     validateSkills
@@ -105,5 +108,17 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 })
 
+userSchema.methods.isPasswordValid = async function(password = '') {
+    const user = this;
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    return isPasswordValid;
+}
+
+userSchema.methods.getJWTToken = async function() {
+    const user = this;
+    const token = await jwt.sign({_id: user._id, name: `${user.firstName} ${user.lastName}`}, JWT_SECRET, {expiresIn: '1d'})
+    return token;
+}
+
+
 module.exports = mongoose.model('Users', userSchema);
-// module.exports = UserModel;

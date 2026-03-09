@@ -48,7 +48,10 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         required: true,
-        enum: GENDER_ENUM
+        enum: {
+            values: GENDER_ENUM,
+            message: `{VALUE} is not a valid gen`
+        }
     },
     phone: {
         type: Number,
@@ -119,6 +122,12 @@ userSchema.methods.getJWTToken = async function() {
     const token = await jwt.sign({_id: user._id, name: `${user.firstName} ${user.lastName}`}, JWT_SECRET, {expiresIn: '1d'})
     return token;
 }
+
+userSchema.pre(['save', 'findOneAndUpdate'], function(next) {
+    if(!this.isNew && this.isModified('email')) {
+        return next(new Error("Email cant be updated"))
+    }
+})
 
 
 module.exports = mongoose.model('Users', userSchema);

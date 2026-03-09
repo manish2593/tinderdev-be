@@ -17,7 +17,6 @@ const isAuthenticated = async (req, res, next) => {
             throw new Error("Unauthorised Access");
         }
     } catch(err) {
-        console.log("errr", err.message);
         res.status(401).send("Unauthorised access!!");
     }
 }
@@ -33,11 +32,9 @@ const isAdmin = (req, res, next) => {
 
 const isUnauthorisedPath = (middleWare, paths) => {
     return (req, res, next) => {
-        console.log(paths.indexOf(req.path));
         if(paths.indexOf(req.path) > -1) {
             next();
         } else {
-            console.log( "api paths", req.path, paths);
             middleWare(req, res, next);
         }
     }

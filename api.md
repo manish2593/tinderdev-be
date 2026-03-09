@@ -2,6 +2,7 @@
 
 # Auth 
     - Login POST / https://api.gotinder.com/v1/auth/login?locale=en
+    - Logout GET / https://api.gotinder.com/v1/auth/logout?locale=en
     - Signup POST / https://api.gotinder.com/v1/auth/signup?locale=en
     - Forgot Password POST / https://api.gotinder.com/v1/auth/password/forgot
     - Create Password POST / https://api.gotinder.com/v1/auth/password/create
@@ -18,7 +19,8 @@
     - Pass / GET / https://api.gotinder.com/request/pass/695147fea5949a7723f6df69?locale=en&s_number=5410973696367348
     - Like / GET / https://api.gotinder.com/request/like/695147fea5949a7723f6df69?locale=en&s_number=5410973696367348
     - Block / GET / https://api.gotinder.com/request/block/695147fea5949a7723f6df69?locale=en&s_number=5410973696367348
-    - Reject / GET / https://api.gotinder.com/request/reject/695147fea5949a7723f6df69?locale=en&s_number=5410973696367348
+    - Reject / GET / https://api.gotinder.com/review/reject/695147fea5949a7723f6df69?locale=en&s_number=5410973696367348
+    - Accept / GET / https://api.gotinder.com/review/accept/695147fea5949a7723f6df69?locale=en&s_number=5410973696367348
 
 # Connections
     - My Matches / GET / https://api.gotinder.com/v1/matches

@@ -28,8 +28,16 @@ const ERROR_MESSAGES = {
 const GENDER_ENUM = ['male', 'female'];
 const JWT_SECRET = "@Dev!!Tinder@BE";
 const UNAUTHORISED_PATH = ['/login', '/signup'];
+const PASS = 'pass';
+const LIKE = 'like';
+const REJECT = 'reject';
+const ACCEPT = 'accept';
+const USER_FIELDS = ['firstName', 'lastName', 'age', 'gender', 'skills'];
+const CONNECTION_SEND_STATUS = [PASS, LIKE, REJECT, ACCEPT];
+const CONNECTION_REVIEW_STATUS = [REJECT, ACCEPT];
 module.exports = {
     PORT,
+    USER_FIELDS,
     JWT_SECRET,
     UNAUTHORISED_PATH,
     ADMIN_TOKEN,
@@ -38,5 +46,11 @@ module.exports = {
     SIGNUP_FIELDS,
     ERROR_MESSAGES,
     GENDER_ENUM,
-    PHONE_COUNTRY_CODE
+    PHONE_COUNTRY_CODE,
+    ACCEPT,
+    REJECT,
+    PASS,
+    LIKE,
+    CONNECTION_SEND_STATUS,
+    CONNECTION_REVIEW_STATUS
 }

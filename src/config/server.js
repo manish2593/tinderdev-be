@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const { isUnauthorisedPath, isAuthenticated } = require('../middlewares/auth');
-const { UNAUTHORISED_PATH, JWT_SECRET } = require('../variables');
+const { UNAUTHORISED_PATH } = require('../variables');
 
 const app = express();
 app.use(express.json());

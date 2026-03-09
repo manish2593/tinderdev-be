@@ -9,12 +9,18 @@ const {
 const {
     userRouter,
     profileRouter,
-    authRouter
+    authRouter,
+    notificationRouter,
+    requestRouter,
+    connectionRouter
 } = require('./routes/index');
 
 app.use('/', authRouter);
 app.use('/', profileRouter);
 app.use('/', userRouter);
+app.use('/', notificationRouter);
+app.use('/', requestRouter);
+app.use('/', connectionRouter);
 
 connectDB().then(() => {
     console.log(`connected to database ${DATABASE_NAME} successfully`)

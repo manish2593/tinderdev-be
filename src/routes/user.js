@@ -1,7 +1,17 @@
 const express = require('express');
 const userRouter = express.Router();
 const UserModel = require("../models/user");
-const { validateSignupFields } = require('../utils/validator');
+const ConnectionRequestModel = require('../models/connectionRequest');
+const {
+    validateSignupFields
+} = require('../utils/validator');
+const {
+    LIKE,
+    USER_FIELDS
+} = require('../variables');
+const {
+    Connection
+} = require('mongoose');
 
 // find user by email
 userRouter.get('/user', async (req, res) => {
@@ -41,7 +51,7 @@ userRouter.patch('/users/:userId', async (req, res) => {
             runValidators: true
         })
 
-        if(!user) {
+        if (!user) {
             throw new Error("User not found.")
         }
 
@@ -73,4 +83,70 @@ userRouter.delete('/users', async (req, res) => {
     res.send("User delected successfully.")
 })
 
+userRouter.get('/user/request/received', async (req, res) => {
+    const loggedInUser = req.user;
+    try {
+        const requests = await ConnectionRequestModel.find({
+            toUserId: loggedInUser._id,
+            status: LIKE
+        }).populate('fromUserId', USER_FIELDS).populate('toUserId', USER_FIELDS);
+        const data = requests.map(req => {
+            const user = loggedInUser._id.toString() === req.fromUserId._id.toString() ? req.toUserId : req.fromUserId
+            return {
+                requestId: req._id,
+                user
+            }
+        })
+
+        res.json({
+            data,
+            status: 200
+        });
+    } catch (err) {
+        res.status(400).send(`Invalid Request: ${err.message}`)
+    }
+})
+
+userRouter.get('/feed', async (req, res) => {
+    try {
+        const loggedInUser = req.user;
+        const { page = 1, limit = 10 } = req.query;
+        const skipVal = (((parseInt(page) || 1) - 1) * parseInt(limit));
+        const connections = await ConnectionRequestModel.find({
+            $or: [{
+                    fromUserId: loggedInUser._id
+                },
+                {
+                    toUserId: loggedInUser._id
+                }
+            ]
+        });
+        const hiddenUsers = new Set([]);
+        connections.map(conn => {
+            hiddenUsers.add(conn.toUserId.toString());
+            hiddenUsers.add(conn.fromUserId.toString());
+        })
+
+        const feedUsers = await UserModel.find({
+            $and: [{
+                    _id: {
+                        $nin: Array.from(hiddenUsers)
+                    }
+                },
+                {
+                    _id: {
+                        $ne: loggedInUser._id
+                    }
+                }
+            ]
+        }).skip(skipVal).limit(parseInt(limit) || 10).select('firstName gender age')
+
+        res.json({
+            status: 200,
+            data: feedUsers
+        })
+    } catch (err) {
+        res.status(400).send(`Error: ${err.message}`);
+    }
+})
 module.exports = userRouter;

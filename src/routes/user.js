@@ -139,7 +139,7 @@ userRouter.get('/feed', async (req, res) => {
                     }
                 }
             ]
-        }).skip(skipVal).limit(parseInt(limit) || 10).select('firstName gender age')
+        }).skip(skipVal).limit(parseInt(limit) || 10);
 
         res.json({
             status: 200,

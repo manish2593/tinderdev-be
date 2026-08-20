@@ -22,7 +22,7 @@ authRouter.post('/login', async (req, res) => {
         if (isValidUser) {
             const token = await user.getJWTToken();
             res.cookie("token", token);
-            res.status(200).send("Login successful");
+            res.status(200).send({user, message: "User logged in successfully."});
         } else {
             res.status(401).send("Invalid Credentials");
         }

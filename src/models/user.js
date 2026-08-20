@@ -123,9 +123,9 @@ userSchema.methods.getJWTToken = async function() {
     return token;
 }
 
-userSchema.pre(['save', 'findOneAndUpdate'], function(next) {
-    if(!this.isNew && this.isModified('email')) {
-        return next(new Error("Email cant be updated"))
+userSchema.pre('findOneAndUpdate', function(next) {
+    if(!this.isNew && this._update.email) {
+        throw new Error("Email cant be updated");
     }
 })
 

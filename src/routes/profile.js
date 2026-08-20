@@ -25,7 +25,7 @@ profileRouter.patch('/profile/edit', async(req, res) => {
             returnDocument: 'after',
             runValidators: true
         }).catch(err => {
-            console.log(err);
+            throw new Error(err.message);
         })
         
         if(!!updatedUser) {
@@ -37,7 +37,7 @@ profileRouter.patch('/profile/edit', async(req, res) => {
             res.status(401).send("User not found");
         }
     } catch(err) {
-        res.status(400).send(err.message);
+        res.json({status: 400, error: err.message});
     }
 })
 

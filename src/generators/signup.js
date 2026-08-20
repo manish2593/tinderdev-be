@@ -10,7 +10,8 @@ const signupPayload = async (req = {}) => {
         address,
         email,
         skills,
-        password
+        password,
+        photoUrl
     } = req?.body;
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -21,6 +22,7 @@ const signupPayload = async (req = {}) => {
         gender,
         phone,
         address,
+        photoUrl,
         email,
         skills,
         password: passwordHash

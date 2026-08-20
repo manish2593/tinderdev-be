@@ -13,7 +13,6 @@ authRouter.post('/login', async (req, res) => {
 
     try {
         const user = await UserModel.findOne({email: req.body?.email});
-        console.log("user", user);
         if(!user){
             throw new Error("Invalid credentials.");
         }

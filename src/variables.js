@@ -9,8 +9,10 @@ const SIGNUP_FIELDS = [
     "email",
     "password",
     "phone",
+    "photoUrl",
     "gender",
     "address",
+    "about",
     "skills"
 ]
 
@@ -23,6 +25,7 @@ const ERROR_MESSAGES = {
     skills: "More than 10 skills are not allowed.",
     address: "Please enter address less to 100 char.",
     lastName: "Please enter valid lastname.",
+    url: "Please enter valid URL",
     firstName: "Please enter valid firstname."
 }
 const GENDER_ENUM = ['male', 'female'];
@@ -32,7 +35,7 @@ const PASS = 'pass';
 const LIKE = 'like';
 const REJECT = 'reject';
 const ACCEPT = 'accept';
-const USER_FIELDS = ['firstName', 'lastName', 'age', 'gender', 'skills'];
+const USER_FIELDS = ['firstName', 'lastName', 'age', 'gender', 'skills' , "photoUrl" , "about"];
 const CONNECTION_SEND_STATUS = [PASS, LIKE, REJECT, ACCEPT];
 const CONNECTION_REVIEW_STATUS = [REJECT, ACCEPT];
 module.exports = {

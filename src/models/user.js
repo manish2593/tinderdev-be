@@ -8,7 +8,8 @@ const {
     JWT_SECRET
 } = require('../variables');
 const {
-    validateSkills
+    validateSkills,
+    isUrlValid
 } = require('../utils/validator');
 const {
     isMobilePhone,
@@ -61,6 +62,16 @@ const userSchema = new mongoose.Schema({
             validator: (value) => isMobilePhone(String(value), PHONE_COUNTRY_CODE),
             message: ERROR_MESSAGES.phone
         }
+    },
+    photoUrl: {
+        type: String,
+        validate: {
+            validator: (val) => isUrlValid(val),
+            message: ERROR_MESSAGES.url
+        }
+    },  
+    about: {
+        type: String,
     },
     address: {
         type: String,

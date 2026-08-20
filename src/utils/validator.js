@@ -9,6 +9,15 @@ const validateSkills = (skills = []) => {
     return skills.length <= 10;
 }
 
+const isUrlValid = (string) => {
+  try {
+    new URL(string);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 const validateLogin = async (payload = {}, user = {}) => {
     try {
         const isValidPassword = await user.isPasswordValid(payload.password);
@@ -22,5 +31,6 @@ const validateLogin = async (payload = {}, user = {}) => {
 module.exports = {
     validateSignupFields,
     validateSkills,
-    validateLogin
+    validateLogin,
+    isUrlValid
 }
